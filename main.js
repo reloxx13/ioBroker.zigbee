@@ -230,6 +230,7 @@ class Zigbee extends adapterCore.Adapter {
         // resolves the stored (default) device names from the first log line on
         await this.stController.loadDeviceNameCache();
         const zigbeeOptions = this.getZigbeeOptions();
+        if (this.config.extPanID.toLowerCase() == this.getNvBackup(zigbeeOptions.dbDir).extended_pan_id) this.log.warn('possible reversed ExtPanID');
         this.zbController = new ZigbeeController(this);
 
         this.zbController.on('log', this.onLog.bind(this));
@@ -883,7 +884,6 @@ class Zigbee extends adapterCore.Adapter {
 
 
         const nvbackup = this.getNvBackup(dbDir);
-        if (this.config.extPanID.toLowerCase() == nvbackup.extended_pan_id) this.log.warn('possible reversed ExtPanID');
 
         const panID = parseInt(override.panID ? override.panID : this.config.panID ? this.config.panID : 0x1a62);
         const channel =  parseInt(override.channel ? override.channel : this.config.channel ? this.config.channel : 11);
